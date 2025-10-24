@@ -1,0 +1,115 @@
+name: Auto distribuild feeds
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**/*.ipk'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  distribuild:
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main') ||
+      (github.event_name == 'workflow_dispatch' &&
+       github.ref == 'refs/heads/main')
+
+    steps:
+      - uses: actions/checkout@v5
+      
+      - name: Cache usign binary
+        id: cache-usign
+        uses: actions/cache@v4
+        with:
+          path: /usr/local/bin/usign
+          key: usign-binary-v1
+
+      - name: Build usign if cache missed
+        if: steps.cache-usign.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git
+          git clone https://git.openwrt.org/project/usign.git
+          cd usign
+          cmake .
+          make
+          sudo cp usign /usr/local/bin/
+          
+      - name: Collect ipk files from repo
+        run: |
+          mkdir -p release_assets
+          for arch in x86_64 aarch64_cortex-a53 arm_cortex-a7_neon-vfpv4; do
+            cp -v $GITHUB_WORKSPACE/${arch}/*.ipk release_assets/ 2>/dev/null || true
+          done
+
+      - name: Restore signing key
+        run: |
+          echo "${{ secrets.FEED_SIGNING_KEY }}" | base64 -d > key-build
+          chmod 600 key-build
+          
+      - name: Prepare feed directories
+        env:
+          FEED_VERSION: 24.10.3
+        run: |
+          chmod +x $GITHUB_WORKSPACE/scripts/ipkg-make-index.sh
+          mkdir -p public/${FEED_VERSION}
+
+          for arch in x86_64 aarch64_cortex-a53 arm_cortex-a7_neon-vfpv4; do
+            mkdir -p public/${FEED_VERSION}/${arch}
+
+            cp release_assets/luci-*.ipk public/${FEED_VERSION}/${arch}/ 2>/dev/null || true
+            cp release_assets/natmapt-*.ipk public/${FEED_VERSION}/${arch}/ 2>/dev/null || true
+            cp release_assets/*${arch}*.ipk public/${FEED_VERSION}/${arch}/ 2>/dev/null || true
+
+            if [ "$(ls -A public/${FEED_VERSION}/${arch}/*.ipk 2>/dev/null)" ]; then
+              (
+                cd public/${FEED_VERSION}/${arch}
+                rm -f Packages Packages.gz Packages.sig
+                $GITHUB_WORKSPACE/scripts/ipkg-make-index.sh . > Packages
+
+                usign -S -m Packages -s $GITHUB_WORKSPACE/key-build -x Packages.sig
+                gzip -9nc Packages > Packages.gz
+              )
+            fi
+          done
+          mkdir -p public/.stfolder
+
+      - name: Sync feeds to self-hosted server
+        env:
+          DEPLOY_SERVER: ${{ secrets.DEPLOY_SERVER }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          RSYNC_OPTS: "-avz --delete --no-perms --no-owner --no-group --omit-dir-times"
+          RSYNC_PORT: ${{ secrets.RSYNC_PORT }}
+        run: |
+          echo "$DEPLOY_KEY" | base64 -d > deploy_key
+          chmod 600 deploy_key
+          ssh -i deploy_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $RSYNC_PORT \
+            ${DEPLOY_USER}@${DEPLOY_SERVER} "whoami && pwd && ls -ld ${DEPLOY_PATH} || echo 'DEPLOY_PATH not found'"
+          ssh -i deploy_key \
+              -o StrictHostKeyChecking=no \
+              -o UserKnownHostsFile=/dev/null \
+              -p $RSYNC_PORT \
+              ${DEPLOY_USER}@${DEPLOY_SERVER} "mkdir -vp ${DEPLOY_PATH}/.stfolder"
+          rsync $RSYNC_OPTS --exclude '.stfolder' \
+            -e "ssh -i deploy_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $RSYNC_PORT" \
+            public/ ${DEPLOY_USER}@${DEPLOY_SERVER}:${DEPLOY_PATH}/
+            
+      - name: Deploy feed to GitHub Pages
+        run: |
+          cd public
+          git init -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Update feed $(date +'%Y-%m-%d %H:%M:%S')"
+          git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git push -f origin gh-pages
