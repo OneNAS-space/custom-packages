@@ -56,7 +56,7 @@ jobs:
           
       - name: Prepare feed directories
         env:
-          FEED_VERSION: 24.10.3
+          FEED_VERSION: 24.10.4
         run: |
           chmod +x $GITHUB_WORKSPACE/scripts/ipkg-make-index.sh
           mkdir -p public/${FEED_VERSION}
