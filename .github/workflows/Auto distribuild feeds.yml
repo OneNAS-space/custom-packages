@@ -1,11 +1,11 @@
 name: Auto distribuild feeds
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - '**/*.ipk'
+#  push:
+#    branches:
+#      - main
+#    paths:
+#      - '**/*.ipk'
   workflow_dispatch:
 
 permissions:
