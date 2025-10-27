@@ -15,11 +15,8 @@ jobs:
   distribuild:
     runs-on: ubuntu-latest
     if: |
-      (github.event_name == 'workflow_run' &&
-       github.event.workflow_run.conclusion == 'success' &&
-       github.event.workflow_run.head_branch == 'main') ||
-      (github.event_name == 'workflow_dispatch' &&
-       github.ref == 'refs/heads/main')
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
 
     steps:
       - uses: actions/checkout@v5
@@ -41,13 +38,6 @@ jobs:
           cmake .
           make
           sudo cp usign /usr/local/bin/
-          
-      - name: Collect ipk files from repo
-        run: |
-          mkdir -p release_assets
-          for arch in x86_64 aarch64_cortex-a53 arm_cortex-a7_neon-vfpv4 luci common; do
-            cp -v $GITHUB_WORKSPACE/${arch}/*.ipk release_assets/ 2>/dev/null || true
-          done
 
       - name: Restore signing key
         run: |
@@ -64,7 +54,7 @@ jobs:
           for arch in x86_64 aarch64_cortex-a53 arm_cortex-a7_neon-vfpv4 luci common; do
             mkdir -p public/${FEED_VERSION}/${arch}
 
-            cp release_assets/*${arch}*.ipk public/${FEED_VERSION}/${arch}/ 2>/dev/null || true
+            cp ${arch}/*.ipk public/${FEED_VERSION}/${arch}/ 2>/dev/null || true
 
             if [ "$(ls -A public/${FEED_VERSION}/${arch}/*.ipk 2>/dev/null)" ]; then
               (
