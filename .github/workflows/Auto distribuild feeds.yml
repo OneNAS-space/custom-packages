@@ -45,7 +45,7 @@ jobs:
       - name: Collect ipk files from repo
         run: |
           mkdir -p release_assets
-          for arch in x86_64 aarch64_cortex-a53 arm_cortex-a7_neon-vfpv4; do
+          for arch in x86_64 aarch64_cortex-a53 arm_cortex-a7_neon-vfpv4 luci common; do
             cp -v $GITHUB_WORKSPACE/${arch}/*.ipk release_assets/ 2>/dev/null || true
           done
 
@@ -61,11 +61,9 @@ jobs:
           chmod +x $GITHUB_WORKSPACE/scripts/ipkg-make-index.sh
           mkdir -p public/${FEED_VERSION}
 
-          for arch in x86_64 aarch64_cortex-a53 arm_cortex-a7_neon-vfpv4; do
+          for arch in x86_64 aarch64_cortex-a53 arm_cortex-a7_neon-vfpv4 luci common; do
             mkdir -p public/${FEED_VERSION}/${arch}
 
-            cp release_assets/luci-*.ipk public/${FEED_VERSION}/${arch}/ 2>/dev/null || true
-            cp release_assets/natmapt-*.ipk public/${FEED_VERSION}/${arch}/ 2>/dev/null || true
             cp release_assets/*${arch}*.ipk public/${FEED_VERSION}/${arch}/ 2>/dev/null || true
 
             if [ "$(ls -A public/${FEED_VERSION}/${arch}/*.ipk 2>/dev/null)" ]; then
