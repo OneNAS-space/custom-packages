@@ -1,0 +1,386 @@
+Package: chinadns-ng
+Version: 2025.08.09-r1
+Depends: libc
+Source: feeds/passwall_packages/chinadns-ng
+SourceName: chinadns-ng
+License: AGPL-3.0-only
+LicenseFiles: LICENSE
+Section: net
+SourceDateEpoch: 1761617805
+URL: https://github.com/zfl9/chinadns-ng
+Maintainer: sbwml <admin@cooluc.com>
+Architecture: x86_64
+Installed-Size: 624640
+Filename: chinadns-ng_2025.08.09-r1_x86_64.ipk
+Size: 286274
+SHA256sum: e14a9adc88b5205e34029a417ffa9fcfc29f0f5d874e5d5f094dfd16750a07b1
+Description:  ChinaDNS next generation, refactoring with epoll and ipset.
+
+Package: geoview
+Version: 0.1.11-r1
+Depends: libc
+Source: feeds/passwall_packages/geoview
+SourceName: geoview
+License: Apache-2.0
+LicenseFiles: LICENSE
+Section: net
+SourceDateEpoch: 1761617805
+URL: https://github.com/snowie2000/geoview
+Maintainer: snowie2000
+Architecture: x86_64
+Installed-Size: 6389760
+Filename: geoview_0.1.11-r1_x86_64.ipk
+Size: 2603153
+SHA256sum: de1378700b3e951336abac30b0bbf0563f86ad352139a5fbfa9d1631c8a7dc1d
+Description:  geoview is a handy tool to extract useful information from geo* files.
+
+Package: hysteria
+Version: 2.6.5-r1
+Depends: libc, ca-bundle
+Source: feeds/passwall_packages/hysteria
+SourceName: hysteria
+License: MIT
+Section: net
+SourceDateEpoch: 1761617805
+URL: https://github.com/apernet/hysteria
+Maintainer: Tianling Shen <cnsztl@immortalwrt.org>
+Architecture: x86_64
+Installed-Size: 19957760
+Filename: hysteria_2.6.5-r1_x86_64.ipk
+Size: 7549379
+SHA256sum: 4025ef9d8846c1afa776817b47c45e8caccdb623e767460b51d159065075d09c
+Description:  Hysteria is a feature-packed network utility optimized for networks
+ of poor quality (e.g. satellite connections, congested public Wi-Fi,
+ connecting from China to servers abroad) powered by a custom version
+ of QUIC protocol.
+
+Package: naiveproxy
+Version: 140.0.7339.123-r3
+Depends: libc, libatomic1
+Source: feeds/passwall_packages/naiveproxy
+SourceName: naiveproxy
+License: BSD 3-Clause
+LicenseFiles: LICENSE
+Section: net
+SourceDateEpoch: 1761617805
+URL: https://github.com/klzgrad/naiveproxy
+Maintainer: sbwml <admin@cooluc.com>
+Architecture: x86_64
+Installed-Size: 7536640
+Filename: naiveproxy_140.0.7339.123-r3_x86_64.ipk
+Size: 3754943
+SHA256sum: 53f52e1824c9194f4cb430100313068f1f218d6eddc31001b4efbdbdf877e9ae
+Description:  NaïveProxy uses Chrome's network stack to camouflage traffic with strong
+ censorship resistance and low detectability. Reusing Chrome's stack also
+ ensures best practices in performance and security.
+
+Package: natmapt
+Version: 20250924-r2
+Depends: libc, curl, jsonfilter, bash
+Source: /feed/jackie264/natmapt
+SourceName: natmapt
+License: MIT
+LicenseFiles: License
+Section: net
+SourceDateEpoch: 1761686204
+URL: https://github.com/heiher/natmap
+Maintainer: Anya Lin <hukk1996@gmail.com>, Richard Yu <yurichard3839@gmail.com>, Ray Wang <r@hev.cc>
+Architecture: x86_64
+Installed-Size: 102400
+Filename: natmapt_20250924-r2_x86_64.ipk
+Size: 29919
+SHA256sum: 5942ec8328b02e2db4f9edcaee1e0f8fc2de8e8a9b046e2707664df803edda3e
+Description:  TCP/UDP port mapping tool for full cone NAT
+
+Package: shadowsocks-libev-ss-local
+Version: 3.3.5-r13
+Depends: libc, libev, libmbedtls21, libpthread, libsodium, libpcre2
+Source: feeds/passwall_packages/shadowsocks-libev
+SourceName: shadowsocks-libev
+License: GPL-3.0-or-later
+LicenseFiles: LICENSE
+Section: net
+SourceDateEpoch: 1761650075
+URL: https://github.com/shadowsocks/shadowsocks-libev
+CPE-ID: cpe:/a:shadowsocks:shadowsocks-libev
+Maintainer: Yousong Zhou <yszhou4tech@gmail.com>
+Architecture: x86_64
+Installed-Size: 133120
+Filename: shadowsocks-libev-ss-local_3.3.5-r13_x86_64.ipk
+Size: 52448
+SHA256sum: 686074c1e5f0cb460b5cc0902a8c3664f84ba6d896ef65bd19a9d2a8e1ee9371
+Description:  shadowsocks-libev ss-local
+
+Package: shadowsocks-libev-ss-redir
+Version: 3.3.5-r13
+Depends: libc, libev, libmbedtls21, libpthread, libsodium
+Source: feeds/passwall_packages/shadowsocks-libev
+SourceName: shadowsocks-libev
+License: GPL-3.0-or-later
+LicenseFiles: LICENSE
+Section: net
+SourceDateEpoch: 1761650075
+URL: https://github.com/shadowsocks/shadowsocks-libev
+CPE-ID: cpe:/a:shadowsocks:shadowsocks-libev
+Maintainer: Yousong Zhou <yszhou4tech@gmail.com>
+Architecture: x86_64
+Installed-Size: 112640
+Filename: shadowsocks-libev-ss-redir_3.3.5-r13_x86_64.ipk
+Size: 47096
+SHA256sum: fd7dfcc3141b16c2a59c56fb370da9a37ebe53f31cb48d6f80adf12eaebfbbd8
+Description:  shadowsocks-libev ss-redir
+
+Package: shadowsocks-libev-ss-server
+Version: 3.3.5-r13
+Depends: libc, libev, libmbedtls21, libpthread, libsodium, libcares, libpcre2
+Source: feeds/passwall_packages/shadowsocks-libev
+SourceName: shadowsocks-libev
+License: GPL-3.0-or-later
+LicenseFiles: LICENSE
+Section: net
+SourceDateEpoch: 1761650075
+URL: https://github.com/shadowsocks/shadowsocks-libev
+CPE-ID: cpe:/a:shadowsocks:shadowsocks-libev
+Maintainer: Yousong Zhou <yszhou4tech@gmail.com>
+Architecture: x86_64
+Installed-Size: 143360
+Filename: shadowsocks-libev-ss-server_3.3.5-r13_x86_64.ipk
+Size: 57139
+SHA256sum: 6fd48d844c7bf4630a214805f52111865104555abfbcf344bf370167584933bb
+Description:  shadowsocks-libev ss-server
+
+Package: shadowsocks-rust-sslocal
+Version: 1.23.5-r1
+Depends: libc
+Source: feeds/passwall_packages/shadowsocks-rust
+SourceName: shadowsocks-rust
+License: MIT
+LicenseFiles: LICENSE
+Section: net
+SourceDateEpoch: 1761617805
+URL: https://github.com/shadowsocks/shadowsocks-rust
+Maintainer: Tianling Shen <cnsztl@immortalwrt.org>
+Architecture: x86_64
+Installed-Size: 9390080
+Filename: shadowsocks-rust-sslocal_1.23.5-r1_x86_64.ipk
+Size: 3837580
+SHA256sum: 972cb8542ef05e4b87c7c8b24bc4409d3a9f7aeb708c324eba2965143cadffac
+Description:  shadowsocks-rust sslocal
+
+Package: shadowsocks-rust-ssserver
+Version: 1.23.5-r1
+Depends: libc
+Source: feeds/passwall_packages/shadowsocks-rust
+SourceName: shadowsocks-rust
+License: MIT
+LicenseFiles: LICENSE
+Section: net
+SourceDateEpoch: 1761617805
+URL: https://github.com/shadowsocks/shadowsocks-rust
+Maintainer: Tianling Shen <cnsztl@immortalwrt.org>
+Architecture: x86_64
+Installed-Size: 7598080
+Filename: shadowsocks-rust-ssserver_1.23.5-r1_x86_64.ipk
+Size: 3083141
+SHA256sum: 9875eefbfb1b4e8a52a21a4eeb041b26ee73be4eb6fd207e64c85bb1c61c6569
+Description:  shadowsocks-rust ssserver
+
+Package: shadowsocksr-libev-ssr-local
+Version: 2.5.6-r11
+Depends: libc, libev, libsodium, libopenssl3, libpthread, libpcre2, libudns, zlib
+Source: feeds/passwall_packages/shadowsocksr-libev
+SourceName: shadowsocksr-libev
+License: GPL-3.0
+LicenseFiles: LICENSE
+Section: net
+SourceDateEpoch: 1761617805
+URL: https://github.com/shadowsocksrr/shadowsocksr-libev
+Architecture: x86_64
+Installed-Size: 143360
+Filename: shadowsocksr-libev-ssr-local_2.5.6-r11_x86_64.ipk
+Size: 63583
+SHA256sum: b482e7836de9f435f3931d166868f614bdec4a75afdccc8d27a64afbb6be68c9
+Description:  shadowsocksr-libev ssr-local
+
+Package: shadowsocksr-libev-ssr-redir
+Version: 2.5.6-r11
+Depends: libc, libev, libsodium, libopenssl3, libpthread, libpcre2, libudns, zlib
+Source: feeds/passwall_packages/shadowsocksr-libev
+SourceName: shadowsocksr-libev
+License: GPL-3.0
+LicenseFiles: LICENSE
+Section: net
+SourceDateEpoch: 1761617805
+URL: https://github.com/shadowsocksrr/shadowsocksr-libev
+Architecture: x86_64
+Installed-Size: 133120
+Filename: shadowsocksr-libev-ssr-redir_2.5.6-r11_x86_64.ipk
+Size: 56784
+SHA256sum: 046c7971bfc75b2377a2655a40d021eca071ec2245dafda6c24dcf6739c0f500
+Description:  shadowsocksr-libev ssr-redir
+
+Package: shadowsocksr-libev-ssr-server
+Version: 2.5.6-r11
+Depends: libc, libev, libsodium, libopenssl3, libpthread, libpcre2, libudns, zlib
+Source: feeds/passwall_packages/shadowsocksr-libev
+SourceName: shadowsocksr-libev
+License: GPL-3.0
+LicenseFiles: LICENSE
+Section: net
+SourceDateEpoch: 1761617805
+URL: https://github.com/shadowsocksrr/shadowsocksr-libev
+Architecture: x86_64
+Installed-Size: 153600
+Filename: shadowsocksr-libev-ssr-server_2.5.6-r11_x86_64.ipk
+Size: 66721
+SHA256sum: 5ff78723791732e615f46bc2f21042f31381303c00370b87fa4cd85e704b5358
+Description:  shadowsocksr-libev ssr-server
+
+Package: simple-obfs-client
+Version: 0.0.5-r3
+Depends: libc, libpthread, libev
+Provides: simple-obfs
+Source: feeds/passwall_packages/simple-obfs
+SourceName: simple-obfs
+License: GPL-3.0-or-later
+LicenseFiles: LICENSE
+Section: net
+SourceDateEpoch: 1761617805
+URL: https://github.com/shadowsocks/simple-obfs
+Maintainer: Jian Chang <aa65535@live.com>
+Architecture: x86_64
+Installed-Size: 81920
+Filename: simple-obfs-client_0.0.5-r3_x86_64.ipk
+Size: 31221
+SHA256sum: f27167584cb47123517833a99dcac243cf1fd291ecc58c470e2503d161f59db6
+Description:  Simple-obfs is a simple obfusacting tool, designed as plugin server of shadowsocks.
+
+Package: sing-box
+Version: 1.12.12-r1
+Depends: libc, ca-bundle, kmod-inet-diag, kmod-netlink-diag, kmod-tun
+Source: feeds/passwall_packages/sing-box
+SourceName: sing-box
+License: GPL-3.0-or-later
+LicenseFiles: LICENSE
+Section: net
+Require-User: sing-box=5566:sing-box=5566
+SourceDateEpoch: 1761700676
+URL: https://sing-box.sagernet.org/
+Maintainer: Tianling Shen <cnsztl@immortalwrt.org>
+Architecture: x86_64
+Installed-Size: 44656640
+Filename: sing-box_1.12.12-r1_x86_64.ipk
+Size: 16461740
+SHA256sum: 3659f54f13f10d93fddd860b9a5283208b54acb1f1dfc9bc27ebf10b5dc29ce3
+Description:  Sing-box is a universal proxy platform which supports hysteria, SOCKS, Shadowsocks,
+ ShadowTLS, Tor, trojan, VLess, VMess, WireGuard and so on.
+
+Package: stuntman-client
+Version: 1.2.17~cc5b875b-r20240806
+Depends: libc, libpthread, libstdcpp6, libopenssl3
+Source: /feed/jackie264/stuntman
+SourceName: stuntman
+License: Apache-2.0
+LicenseFiles: LICENSE
+Section: net
+SourceDateEpoch: 1761300332
+URL: https://github.com/jselbie/stunserver
+Maintainer: Anya Lin <hukk1996@gmail.com>
+Architecture: x86_64
+Installed-Size: 102400
+Filename: stuntman-client_1.2.17~cc5b875b-r20240806_x86_64.ipk
+Size: 39584
+SHA256sum: f040f54c4cfc574145fbf517ab57d3ebbf24e08324399c295bde923d741ee338
+Description:  An open source STUN server and client code by john selbie. Compliant with the latest RFCs including 5389, 5769, and 5780. Also includes backwards compatibility for RFC 3489.
+
+Package: tcping
+Version: 0.3-r1
+Depends: libc
+Source: feeds/passwall_packages/tcping
+SourceName: tcping
+License: GPL-2.0-only
+LicenseFiles: license.txt
+Section: net
+SourceDateEpoch: 1761617805
+URL: https://github.com/jlyo/tcping
+Architecture: x86_64
+Installed-Size: 20480
+Filename: tcping_0.3-r1_x86_64.ipk
+Size: 4419
+SHA256sum: 0c76dacf3924503aff525f068d9c3a7157af1f04d40b039260f78f73413156fb
+Description:  tcping measures the latency of a tcp-connection
+
+Package: tuic-client
+Version: 1.0.0-r1
+Depends: libc
+Source: feeds/passwall_packages/tuic-client
+SourceName: tuic-client
+LicenseFiles: LICENSE
+Section: net
+SourceDateEpoch: 1761617805
+URL: https://github.com/EAimTY/tuic/
+Maintainer: Tianling Shen <cnsztl@immortalwrt.org>
+Architecture: x86_64
+Installed-Size: 2334720
+Filename: tuic-client_1.0.0-r1_x86_64.ipk
+Size: 1125175
+SHA256sum: e4a17482dcda2fe5e4bf2a71505c4a4b4238cb5b538aab5c88ad2b79742a0a90
+Description:  Delicately-TUICed 0-RTT proxy protocol
+
+Package: v2ray-plugin
+Version: 5.41.0-r1
+Depends: libc, ca-bundle
+Source: feeds/passwall_packages/v2ray-plugin
+SourceName: v2ray-plugin
+License: MIT
+LicenseFiles: LICENSE
+Section: net
+SourceDateEpoch: 1761617805
+URL: https://github.com/teddysun/v2ray-plugin
+Maintainer: madeye <max.c.lv@gmail.com>
+Architecture: x86_64
+Installed-Size: 16783360
+Filename: v2ray-plugin_5.41.0-r1_x86_64.ipk
+Size: 6413594
+SHA256sum: 720f0460d866a3f0e18104d503ba7f815ebaa4d09a3a7bcb62f8e988d0530445
+Description:  SIP003 plugin for shadowsocks, based on v2ray
+
+Package: vlmcsd
+Version: 2020.03.30~70e03572-r10
+Depends: libc, libpthread
+Source: /feed/jackie264/vlmcsd
+SourceName: vlmcsd
+License: MIT
+LicenseFiles: LICENSE
+Section: net
+Require-User: vlmcsd:vlmcsd
+SourceDateEpoch: 1761300332
+URL: https://github.com/Wind4/vlmcsd
+Maintainer: fuyumi <280604399@qq.com>
+Architecture: x86_64
+Installed-Size: 61440
+Filename: vlmcsd_2020.03.30~70e03572-r10_x86_64.ipk
+Size: 24193
+SHA256sum: 61fb6096d782b3d6c3b4bef931cf9a85b9d70b95510d9f81eaed5f84c411ecf3
+Description:  KMS Emulator in C (currently runs on Linux including Android, FreeBSD,
+ Solaris, Minix, Mac OS, iOS, Windows with or without Cygwin)
+
+Package: xray-core
+Version: 25.10.15-r1
+Depends: libc, ca-bundle
+Source: feeds/passwall_packages/xray-core
+SourceName: Xray-core
+License: MPL-2.0
+LicenseFiles: LICENSE
+Section: net
+SourceDateEpoch: 1761617805
+URL: https://xtls.github.io
+Maintainer: Tianling Shen <cnsztl@immortalwrt.org>
+Architecture: x86_64
+Installed-Size: 30238720
+Filename: xray-core_25.10.15-r1_x86_64.ipk
+Size: 11194286
+SHA256sum: d38e00da02147f32f6795ee3ab8ba2b857c877dc3cfd087c196f34b8b3dd4227
+Description:  Xray, Penetrates Everything. It helps you to build your own computer network.
+ It secures your network connections and thus protects your privacy.
+

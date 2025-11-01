@@ -1,0 +1,164 @@
+Package: luci-app-adguardhome
+Version: 2.2.12-r20251029
+Depends: libc, wget-ssl, tar, xz-utils
+Source: feeds/base/luci-app-adguardhome
+SourceName: luci-app-adguardhome
+License: MIT
+LicenseFiles: LICENSE
+Section: luci
+SourceDateEpoch: 1760891865
+Maintainer: OneNAS-space
+Architecture: all
+Installed-Size: 327680
+Filename: luci-app-adguardhome_2.2.12-r20251029_all.ipk
+Size: 92829
+SHA256sum: cff487fb9380ac789265bc2e7d3499b56f08a97c0f29d1dabfc6747490daf158
+Description:  LuCI support for adguardhome
+
+Package: luci-app-advanced-reboot
+Version: 1.1.1-r7
+Depends: libc, luci-base, jshn
+Source: /feed/luci/applications/luci-app-advanced-reboot
+SourceName: luci-app-advanced-reboot
+License: AGPL-3.0-or-later
+Section: luci
+SourceDateEpoch: 1761300332
+URL: https://github.com/stangri/luci-app-advanced-reboot/
+Maintainer: OpenWrt LuCI community
+Architecture: all
+Installed-Size: 71680
+Filename: luci-app-advanced-reboot_1.1.1-r7_all.ipk
+Size: 11901
+SHA256sum: 4c6a63fc1395de592f964eb86c728ea6581b09d7557cf53d6b966e0cb144b606
+Description:  Provides Web UI (found under System/Advanced Reboot) to reboot supported Linksys and ZyXEL routers to an alternative partition. Also provides Web UI to shut down (power off) your device. Supported dual-partition routers are listed at https://docs.openwrt.melmac.ca/luci-app-advanced-reboot/
+
+Package: luci-app-advanced
+Version: 1.20-r20220218
+Depends: libc
+Source: /feed/luci/applications/luci-app-advanced
+SourceName: luci-app-advanced
+Section: luci
+SourceDateEpoch: 1761300332
+Architecture: all
+Installed-Size: 71680
+Filename: luci-app-advanced_1.20-r20220218_all.ipk
+Size: 13280
+SHA256sum: 129f102989e4ababa286966f1bd27d23e2e2ecef220afd22360434bd8519036c
+Description:  LuCI Support for advanced and filebrowser
+
+Package: luci-app-cpu-status
+Version: 0.6.1-r1
+Depends: libc
+Source: /feed/luci/applications/luci-app-cpu-status
+SourceName: luci-app-cpu-status
+License: MIT
+Section: luci
+SourceDateEpoch: 1761300332
+URL: https://github.com/openwrt/luci
+Maintainer: OpenWrt LuCI community
+Architecture: all
+Installed-Size: 40960
+Filename: luci-app-cpu-status_0.6.1-r1_all.ipk
+Size: 6520
+SHA256sum: e228c2077a3971a7856e9668b556614376fef6f9cc014488d3a43f0daf4d945f
+Description:  CPU utilization info for the LuCI status page
+
+Package: luci-app-log-viewer
+Version: 1.5.0-r2
+Depends: libc, ucode, ucode-mod-fs
+Source: /feed/luci/applications/luci-app-log-viewer
+SourceName: luci-app-log-viewer
+License: MIT
+Section: luci
+SourceDateEpoch: 1761300332
+URL: https://github.com/openwrt/luci
+Maintainer: OpenWrt LuCI community
+Architecture: all
+Installed-Size: 61440
+Filename: luci-app-log-viewer_1.5.0-r2_all.ipk
+Size: 10606
+SHA256sum: faad77a9bfa8ac42f11bed9a77782095470905837ead4ff7741d9072cd1d39ae
+Description:  Advanced syslog and kernel log (tail, search, etc)
+
+Package: luci-app-natmapt
+Version: 25.298-r76272
+Depends: libc, natmapt, coreutils-timeout
+Source: /feed/luci/applications/luci-app-natmapt
+SourceName: luci-app-natmapt
+License: Apache-2.0
+Section: luci
+SourceDateEpoch: 1761300332
+URL: https://github.com/openwrt/luci
+Maintainer: OpenWrt LuCI community
+Architecture: all
+Installed-Size: 40960
+Filename: luci-app-natmapt_25.298-r76272_all.ipk
+Size: 8376
+SHA256sum: 0f7a6efb5a1135347a4183b9c4f56b886347a68b95c9d7ae904c3a9fe83fd0e7
+Description:  TCP/UDP port mapping for full cone NAT
+
+Package: luci-app-passwall2
+Version: 25.9.24-r1
+Depends: libc, coreutils, coreutils-base64, coreutils-nohup, curl, ip-full, libuci-lua, lua, luci-compat, luci-lib-jsonc, resolveip, tcping, xray-core, geoview, v2ray-geoip, v2ray-geosite, unzip, luci-lua-runtime
+Source: feeds/passwall2/luci-app-passwall2
+SourceName: luci-app-passwall2
+Section: luci
+SourceDateEpoch: 1761363314
+URL: https://github.com/openwrt/luci
+Maintainer: OpenWrt LuCI community
+Architecture: all
+Installed-Size: 1044480
+Filename: luci-app-passwall2_25.9.24-r1_all.ipk
+Size: 268216
+SHA256sum: 0cb1161601b22119882f1b51af7898564e4ae7bb26a1c8742d050fc2f014b0b2
+Description:  LuCI support for PassWall 2
+
+Package: luci-app-temp-status
+Version: 0.7.1-r2
+Depends: libc, ucode, ucode-mod-fs
+Source: /feed/luci/applications/luci-app-temp-status
+SourceName: luci-app-temp-status
+License: MIT
+Section: luci
+SourceDateEpoch: 1761300332
+URL: https://github.com/openwrt/luci
+Maintainer: OpenWrt LuCI community
+Architecture: all
+Installed-Size: 40960
+Filename: luci-app-temp-status_0.7.1-r2_all.ipk
+Size: 8181
+SHA256sum: 85bd2a5f2e013a8eb9a2583f0aaacf28e31fef85a89ce2ce3efad8470babb4eb
+Description:  Temperature sensors data for the LuCI status page
+
+Package: luci-app-vlmcsd
+Version: 25.298-r77912
+Depends: libc, vlmcsd
+Source: /feed/luci/applications/luci-app-vlmcsd
+SourceName: luci-app-vlmcsd
+Section: luci
+SourceDateEpoch: 1761300332
+URL: https://github.com/openwrt/luci
+Maintainer: OpenWrt LuCI community
+Architecture: all
+Installed-Size: 20480
+Filename: luci-app-vlmcsd_25.298-r77912_all.ipk
+Size: 2340
+SHA256sum: 2f4533a6cdc113a7212b0666b2102e0c0c918e099f4ad0f737ae0cb2f36f7cd9
+Description:  LuCI support for Vlmcsd KMS Server
+
+Package: luci-theme-argon
+Version: 2.4.3-r20250722
+Depends: libc, wget, jsonfilter
+Source: feeds/base/downloads/luci-theme-argon
+SourceName: luci-theme-argon
+Section: luci
+SourceDateEpoch: 1761317706
+URL: https://github.com/openwrt/luci
+Maintainer: OpenWrt LuCI community
+Architecture: all
+Installed-Size: 604160
+Filename: luci-theme-argon_2.4.3-r20250722_all.ipk
+Size: 399931
+SHA256sum: c10b1175b396a8020c048d967b42c0b9964ec7306fba3260952860564806e087
+Description:  Argon Theme
+

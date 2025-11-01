@@ -1,0 +1,104 @@
+Package: ipv6-monitor
+Version: 1.0.1-r1
+Depends: libc
+Source: /feed/jackie264/ipv6-monitor
+SourceName: ipv6-monitor
+Section: net
+SourceDateEpoch: 1761686204
+Architecture: all
+Installed-Size: 20480
+Filename: ipv6-monitor_1.0.1-r1_all.ipk
+Size: 2856
+SHA256sum: 19b0b1b28bc2f87180edec410d5bdd3469fec324bb1275743f2f0dcfadf0b042
+Description:  A small daemon to monitor IPv6-PD on WAN6 and auto-recover when prefix is lost.
+
+Package: natmapt-client-script-deluge
+Version: 0.2025.6.4
+Depends: libc, natmapt
+Provides: natmapt-client-scripts
+Source: /feed/jackie264/natmapt
+SourceName: natmapt
+License: MIT
+LicenseFiles: License
+Section: net
+SourceDateEpoch: 1761686204
+Maintainer: Anya Lin <hukk1996@gmail.com>, Richard Yu <yurichard3839@gmail.com>, Ray Wang <r@hev.cc>
+Architecture: all
+Installed-Size: 10240
+Filename: natmapt-client-script-deluge_0.2025.6.4_all.ipk
+Size: 1613
+SHA256sum: a41020f40dd49d3e2d0ed4cc4e9f68e0ea82beadfe8721e50863ab4c8d44e960
+Description:  NATMap client scripts (Deluge)
+
+Package: natmapt-client-script-transmission
+Version: 0.2025.6.4
+Depends: libc, natmapt
+Provides: natmapt-client-scripts
+Source: /feed/jackie264/natmapt
+SourceName: natmapt
+License: MIT
+LicenseFiles: License
+Section: net
+SourceDateEpoch: 1761686204
+Maintainer: Anya Lin <hukk1996@gmail.com>, Richard Yu <yurichard3839@gmail.com>, Ray Wang <r@hev.cc>
+Architecture: all
+Installed-Size: 10240
+Filename: natmapt-client-script-transmission_0.2025.6.4_all.ipk
+Size: 1427
+SHA256sum: dfe63340e4df4a9b98f40d0aa0c6a72a654a8c5943b75be4971887107e840c3a
+Description:  NATMap client scripts (Transmission)
+
+Package: natmapt-notify-script-pushbullet
+Version: 0.2025.6.4
+Depends: libc, natmapt
+Provides: natmapt-notify-scripts
+Source: /feed/jackie264/natmapt
+SourceName: natmapt
+License: MIT
+LicenseFiles: License
+Section: net
+SourceDateEpoch: 1761686204
+Maintainer: Anya Lin <hukk1996@gmail.com>, Richard Yu <yurichard3839@gmail.com>, Ray Wang <r@hev.cc>
+Architecture: all
+Installed-Size: 10240
+Filename: natmapt-notify-script-pushbullet_0.2025.6.4_all.ipk
+Size: 1423
+SHA256sum: 907bb0bd7be344ab1c0495e01cdbe3967442d94d6992b53ab2903c83d0667865
+Description:  NATMap notify scripts (Pushbullet)
+
+Package: natmapt-notify-script-pushover
+Version: 0.2025.6.4
+Depends: libc, natmapt
+Provides: natmapt-notify-scripts
+Source: /feed/jackie264/natmapt
+SourceName: natmapt
+License: MIT
+LicenseFiles: License
+Section: net
+SourceDateEpoch: 1761686204
+Maintainer: Anya Lin <hukk1996@gmail.com>, Richard Yu <yurichard3839@gmail.com>, Ray Wang <r@hev.cc>
+Architecture: all
+Installed-Size: 10240
+Filename: natmapt-notify-script-pushover_0.2025.6.4_all.ipk
+Size: 1441
+SHA256sum: 8e8e241e2c7c843998a6dc483f5e0837cc85d06198f85a124ea9c45cdc33f948
+Description:  NATMap notify scripts (Pushover)
+
+Package: natmapt-notify-script-telegram
+Version: 0.2025.6.4
+Depends: libc, natmapt
+Provides: natmapt-notify-scripts
+Source: /feed/jackie264/natmapt
+SourceName: natmapt
+License: MIT
+LicenseFiles: License
+Section: net
+SourceDateEpoch: 1761686204
+Maintainer: Anya Lin <hukk1996@gmail.com>, Richard Yu <yurichard3839@gmail.com>, Ray Wang <r@hev.cc>
+Architecture: all
+Installed-Size: 10240
+Filename: natmapt-notify-script-telegram_0.2025.6.4_all.ipk
+Size: 1544
+SHA256sum: 78041dffb26ee4950fdc1b2e0f7061272d7e74a2bc528486e0f1d910ad321999
+Description:  NATMap notify scripts (Telegram)
+
