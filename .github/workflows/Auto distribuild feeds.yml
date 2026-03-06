@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - Jackie264-patch-1
     paths:
       - '**/*.ipk'
       - '**/*.apk'
