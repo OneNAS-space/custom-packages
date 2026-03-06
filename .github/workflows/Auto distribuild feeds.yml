@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - '**/*.ipk'
+      - '**/*.apk'
   workflow_dispatch:
 
 permissions:
@@ -45,34 +46,52 @@ jobs:
           chmod 600 key-build
           
       - name: Prepare feed directories
-        env:
-          FEED_VERSION: "24.10.5"
-          LINK_VERSIONS: "24.10.4"
         run: |
+          set -e
           chmod +x $GITHUB_WORKSPACE/scripts/ipkg-make-index.sh
-          mkdir -p public/${FEED_VERSION}
+          mkdir -p public/24.10 public/25.12
 
-          for arch in x86_64 aarch64_cortex-a53 arm_cortex-a7_neon-vfpv4 luci common; do
-            mkdir -p public/${FEED_VERSION}/${arch}
+          if [ -d "24.10" ] && [ "$(find 24.10 -name "*.ipk" | head -n 1)" ]; then
+            echo "✨ Detected .ipk files, processing 24.10 feeds..."
+            for arch_path in $(ls -d 24.10/*/); do
+              arch=$(basename "$arch_path")
+              dest="public/24.10/$arch"
+              mkdir -p "$dest"
+              
+              cp 24.10/$arch/*.ipk "$dest/" 2>/dev/null || true
 
-            cp ${arch}/*.ipk public/${FEED_VERSION}/${arch}/ 2>/dev/null || true
+              if [ "$(ls -A "$dest"/*.ipk 2>/dev/null)" ]; then
+                (
+                  cd "$dest"
+                  echo "📦 Generating index for 24.10/$arch"
+                  rm -f Packages Packages.gz Packages.sig
+                  $GITHUB_WORKSPACE/scripts/ipkg-make-index.sh . > Packages
+                  usign -S -m Packages -s $GITHUB_WORKSPACE/key-build -x Packages.sig
+                  gzip -9nc Packages > Packages.gz
+                )
+              fi
+            done
+          else
+            echo "⏭️ No .ipk files found in 24.10/, skipping IPK indexing."
+          fi
 
-            if [ "$(ls -A public/${FEED_VERSION}/${arch}/*.ipk 2>/dev/null)" ]; then
-              (
-                cd public/${FEED_VERSION}/${arch}
-                rm -f Packages Packages.gz Packages.sig
-                $GITHUB_WORKSPACE/scripts/ipkg-make-index.sh . > Packages
-
-                usign -S -m Packages -s $GITHUB_WORKSPACE/key-build -x Packages.sig
-                gzip -9nc Packages > Packages.gz
-              )
-            fi
-          done
+          if [ -d "25.12" ] && [ "$(find 25.12 -name "*.apk" | head -n 1)" ]; then
+            echo "✨ Detected .apk files, processing 25.12 assets..."
+            for arch_path in $(ls -d 25.12/*/); do
+              arch=$(basename "$arch_path")
+              dest="public/25.12/$arch"
+              mkdir -p "$dest"
+              
+              echo "🚚 Copying APKs to 25.12/$arch"
+              cp 25.12/$arch/*.apk "$dest/" 2>/dev/null || true
+            done
+          else
+            echo "⏭️ No .apk files found in 25.12/, skipping APK processing."
+          fi
+          
           cd public
-          for ver in ${LINK_VERSIONS}; do
-            ln -s ${FEED_VERSION} ${ver}
-            echo "Created symbolic link: ${ver} -> ${FEED_VERSION}"
-          done
+          ln -s 24.10 24.10.5 2>/dev/null || true
+          ln -s 24.10 24.10.4 2>/dev/null || true
           mkdir -p .stfolder
 
       - name: Sync feeds to self-hosted server
