@@ -26,7 +26,7 @@ jobs:
             if [ -d "$dir" ]; then
               echo "Moving $dir to 24.10/"
               cp -a "$dir" 24.10/
-              rm "$dir"
+              rm -rf "$dir"
             else
               echo "⚠️ Directory $dir not found, skipping."
             fi
