@@ -91,8 +91,21 @@ jobs:
           fi
           
           cd public
-          ln -s 24.10 24.10.5 2>/dev/null || true
-          ln -s 24.10 24.10.4 2>/dev/null || true
+          LINK_VERSIONS="24.10.4 24.10.5"
+
+          for ver in ${LINK_VERSIONS}; do
+            echo "Processing link: ${ver} -> 24.10"
+            
+            if [ -d "${ver}" ] && [ ! -L "${ver}" ]; then
+              echo "Warning: ${ver} is a real directory, removing it to create link."
+              rm -rf "${ver}"
+            fi
+
+            ln -snf 24.10 "${ver}"
+          done
+
+          echo "Current symbolic links:"
+          ls -ld 24.10*
           mkdir -p .stfolder
 
       - name: Sync feeds to self-hosted server
