@@ -1,0 +1,54 @@
+name: One-time Migration to 24.10 Structure
+
+on:
+  workflow_dispatch: # 仅手动触发
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🧾 Checkout repo
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # 获取完整历史以防万一
+
+      - name: 🚀 Execute Migration
+        run: |
+          set -e
+          # 1. 创建目标父目录
+          mkdir -p 24.10
+          
+          # 2. 定义需要迁移的目录列表
+          TARGETS="aarch64_cortex-a53 arm_cortex-a7_neon-vfpv4 common luci x86_64"
+          
+          for dir in $TARGETS; do
+            if [ -d "$dir" ]; then
+              echo "Moving $dir to 24.10/"
+              # 使用 rsync 或 mv。mv 更快，但由于我们要移动到子目录，需确保不是在移动自己
+              cp -a "$dir" 24.10/
+              rm "$dir"
+            else
+              echo "⚠️ Directory $dir not found, skipping."
+            fi
+          done
+
+          # 3. 验证结构
+          echo "=== New Directory Structure ==="
+          ls -R 24.10/
+
+      - name: 💾 Commit and Push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add .
+          # 检查是否有变动，避免 commit 失败
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Refactor: move legacy architecture directories to 24.10/ structure"
+            git push origin HEAD:${{ github.ref }}
+          fi
