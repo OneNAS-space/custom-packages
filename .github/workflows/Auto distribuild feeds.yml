@@ -125,13 +125,11 @@ jobs:
           # === 第三阶段：收尾 (25.12 专属) ===
           cp "$GITHUB_WORKSPACE/public-key-25.12.pem" "$GITHUB_WORKSPACE/public/releases/packages-25.12/key.pem"
           cd "$GITHUB_WORKSPACE/public/releases"
-          ln -snf packages-25.12 packages-25.12.2
-          ln -snf packages-25.12 packages-25.12.3
           ln -snf packages-25.12 packages-25.12.4
-          mkdir -p 25.12.2 25.12.3 25.12.4
-          ln -snf ../packages-25.12 25.12.2/packages
-          ln -snf ../packages-25.12 25.12.3/packages
+          ln -snf packages-25.12 packages-25.12.5
+          mkdir -p 25.12.4 25.12.5
           ln -snf ../packages-25.12 25.12.4/packages
+          ln -snf ../packages-25.12 25.12.5/packages
           
           echo "✅ All feeds processed successfully."
           mkdir -p $GITHUB_WORKSPACE/.stfolder
