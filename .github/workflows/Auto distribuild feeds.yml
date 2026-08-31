@@ -31,7 +31,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y build-essential cmake git libssl-dev zlib1g-dev libzstd-dev lua5.3 liblua5.3-dev pkg-config scdoc meson ninja-build
           
-          git clone -b master https://gitlab.alpinelinux.org/alpine/apk-tools.git
+          git clone -b master https://github.com/alpinelinux/apk-tools.git
           cd apk-tools
           meson setup -Dprefix=/usr/local build
           ninja -C build
