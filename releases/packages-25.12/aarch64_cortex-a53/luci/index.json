@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "architecture": "aarch64_cortex-a53",
+  "packages": {
+    "luci-app-adguardhome": "26.248.64189~ad40ac7",
+    "luci-app-advanced": "3.4.5-r2",
+    "luci-app-advanced-reboot": "1.1.2-r9",
+    "luci-app-beszel-agent": "26.201.22368~bbfc5a0",
+    "luci-app-cpu-status": "0.6.3-r1",
+    "luci-app-log-viewer": "1.5.0-r4",
+    "luci-app-natmapt": "26.065-r40891",
+    "luci-app-passwall2": "26.9.2-r1",
+    "luci-app-temp-status": "0.8.1-r3",
+    "luci-app-vlmcsd": "26.066-r56853",
+    "luci-theme-argon": "2.4.3-r20260506"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "version": 2,
+  "architecture": "aarch64_cortex-a53",
+  "packages": {
+    "beszel-agent": "0.19.0-r2",
+    "chinadns-ng": "2025.08.09-r1",
+    "geoview": "0.2.6-r1",
+    "hysteria": "2.10.0-r1",
+    "microsocks": "1.0.5-r2",
+    "naiveproxy": "150.0.7871.63-r1",
+    "natmapt": "20260214-r2",
+    "shadowsocks-libev-ss-local": "3.3.5-r13",
+    "shadowsocks-libev-ss-redir": "3.3.5-r13",
+    "shadowsocks-libev-ss-server": "3.3.5-r13",
+    "shadowsocks-rust-sslocal": "1.25.0-r1",
+    "shadowsocks-rust-ssserver": "1.25.0-r1",
+    "shadowsocksr-libev-ssr-local": "2.5.6-r12",
+    "shadowsocksr-libev-ssr-redir": "2.5.6-r12",
+    "shadowsocksr-libev-ssr-server": "2.5.6-r12",
+    "simple-obfs-client": "0.0.5-r3",
+    "sing-box": "1.14.0-r1",
+    "stuntman-client": "1.2.17~cc5b875b-r20240806",
+    "tcping": "0.3-r1",
+    "tuic-client": "1.8.5-r1",
+    "v2ray-plugin": "5.49.0-r1",
+    "vlmcsd": "2026.05.04~badb24ea-r12",
+    "xray-core": "26.7.28-r1"
+  }
+}
