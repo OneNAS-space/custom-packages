@@ -230,20 +230,48 @@ jobs:
           # 附加阶段：把 release 端 luci 组的全部软件包链接进 snapshot 的 luci 组。
           # 否则 snapshot 的 luci 目录里只会有当前正处于 snapshot 通道的那一个包
           # （比如只有 luci-app-adguardhome），其余所有 luci 包都会缺失。
-          # 用软链接而不是复制：同名文件以 snapshot 原生构建的为准，不会被覆盖，
-          # 其余包全部链接自 release 端；随后必须重新签名/重建索引，
-          # 否则链接进来的包不会出现在 snapshot 的 index.json 里。
+          #
+          # 去重按“包名”而不是“完整文件名”判断：文件名形如
+          # <pkgname>-<version>.apk，version 一律以数字开头且不含连字符
+          # （apk 打包本身就要求版本号不能带 '-'），所以用“去掉末尾那段
+          # -<数字开头...>”的方式就能拿到纯包名。这样即便某个包因为
+          # release/snapshot 通道切换，在两边各留了一个不同版本号的文件
+          # （例如 luci-app-adguardhome-26.263.49837~2105706.apk 和
+          # luci-app-adguardhome-26.263.82712~07632bb.apk），也只会保留
+          # snapshot 原生构建的那一份，release 端的旧版本不会被链接进来。
+          #
+          # 用软链接而不是复制；合并完之后必须重新签名/重建索引，否则
+          # 链接进来的包不会出现在 snapshot 的 index.json 里。
           # =========================================================
+          pkg_name_of() {
+            basename "$1" .apk | sed -E 's/-[0-9][^-]*$//'
+          }
+
           RELEASE_LUCI="$GITHUB_WORKSPACE/public/releases/packages-$ver/luci"
           SNAP_LUCI="$GITHUB_WORKSPACE/public/snapshot/packages/luci"
 
           if [ -d "$RELEASE_LUCI" ]; then
             mkdir -p "$SNAP_LUCI"
             echo "🔗 Merging release luci packages into the snapshot luci feed..."
+
+            # 先记录 snapshot 目录里已经有哪些包名是"原生"构建的（合并前的状态）
+            declare -A NATIVE_PKG_NAMES=()
+            for nf in "$SNAP_LUCI"/*.apk; do
+              [ -e "$nf" ] || continue
+              NATIVE_PKG_NAMES["$(pkg_name_of "$nf")"]=1
+            done
+
             (
               cd "$RELEASE_LUCI"
               for f in *.apk; do
                 [ -e "$f" ] || continue
+                pkgname=$(pkg_name_of "$f")
+
+                if [ -n "${NATIVE_PKG_NAMES[$pkgname]:-}" ]; then
+                  echo "   ↳ Skipping $f: snapshot already has a native build of $pkgname"
+                  continue
+                fi
+
                 if [ ! -e "$SNAP_LUCI/$f" ]; then
                   ln -snf "../../../releases/packages-$ver/luci/$f" "$SNAP_LUCI/$f"
                 fi
