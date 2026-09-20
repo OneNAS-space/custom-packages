@@ -51,92 +51,218 @@ jobs:
         run: |
           set -e
           export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
-          mkdir -p public/releases
+          mkdir -p public/releases public/snapshot
 
           MAKE_INDEX_PY="$GITHUB_WORKSPACE/scripts/make-index-json.py"
           chmod +x "$MAKE_INDEX_PY"
-          
-          ver="25.12"
-          PHYS_ROOT="releases/packages-$ver"
-          [ ! -d "$PHYS_ROOT" ] && exit 0
-          
+
           VALID_EXT="*.apk"
 
-          # === 第一阶段：物理同步并生成索引 ===
-          for sub_dir_path in $(ls -d $PHYS_ROOT/*/ 2>/dev/null); do
-            sub_dir=$(basename "$sub_dir_path")
-            dest_dir="$GITHUB_WORKSPACE/public/releases/packages-$ver/$sub_dir"
-            
-            pkg_src_dir="$sub_dir_path"
-            [ -d "$sub_dir_path/packages" ] && pkg_src_dir="$sub_dir_path/packages"
+          # =========================================================
+          # Channel A: stable releases — releases/packages-<ver>
+          # (unchanged from before)
+          # =========================================================
+          ver="25.12"
+          PHYS_ROOT="releases/packages-$ver"
 
-            if [ "$(ls -A $pkg_src_dir/$VALID_EXT 2>/dev/null)" ]; then
-              echo "📂 Processing 25.12 Feed: $sub_dir"
-              mkdir -p "$dest_dir"
+          if [ -d "$PHYS_ROOT" ]; then
+            # === 第一阶段：物理同步并生成索引 ===
+            for sub_dir_path in $(ls -d $PHYS_ROOT/*/ 2>/dev/null); do
+              sub_dir=$(basename "$sub_dir_path")
+              dest_dir="$GITHUB_WORKSPACE/public/releases/packages-$ver/$sub_dir"
               
-              if [ -d "$sub_dir_path/packages" ]; then
-                mkdir -p "$dest_dir/packages"
-                rsync -rlptD "$sub_dir_path/packages/" "$dest_dir/packages/"
-                target_pkg_dir="$dest_dir/packages"
-              else
-                rsync -rlptD "$sub_dir_path/" "$dest_dir/"
-                target_pkg_dir="$dest_dir"
-              fi
+              pkg_src_dir="$sub_dir_path"
+              [ -d "$sub_dir_path/packages" ] && pkg_src_dir="$sub_dir_path/packages"
 
-              (
-                cd "$target_pkg_dir"
-                echo "✍️ Signing APK feed for $sub_dir with ECDSA"
+              if [ "$(ls -A $pkg_src_dir/$VALID_EXT 2>/dev/null)" ]; then
+                echo "📂 Processing 25.12 Feed: $sub_dir"
+                mkdir -p "$dest_dir"
+                
+                if [ -d "$sub_dir_path/packages" ]; then
+                  mkdir -p "$dest_dir/packages"
+                  rsync -rlptD "$sub_dir_path/packages/" "$dest_dir/packages/"
+                  target_pkg_dir="$dest_dir/packages"
+                else
+                  rsync -rlptD "$sub_dir_path/" "$dest_dir/"
+                  target_pkg_dir="$dest_dir"
+                fi
+
+                (
+                  cd "$target_pkg_dir"
+                  echo "✍️ Signing APK feed for $sub_dir with ECDSA"
+                  apk mkndx --allow-untrusted \
+                    --sign "$GITHUB_WORKSPACE/key-apk.sec" \
+                    --output packages.adb *.apk
+                  
+                  # 生成官方 JSON
+                  apk adbdump --format json packages.adb | python3 "$MAKE_INDEX_PY" -f apk -a "$sub_dir" - > index.json
+                )
+              else
+                echo "⏭️ Skipping $sub_dir: No APK files found."
+              fi
+            done
+
+            # === 第二阶段：影子目录处理 ===
+            VER_PUB="$GITHUB_WORKSPACE/public/releases/packages-$ver"
+            for arch_path in $(ls -d $VER_PUB/*/ 2>/dev/null); do
+              arch=$(basename "$arch_path")
+              [[ "$arch" == "luci" || "$arch" == "common" ]] && continue
+              
+              for group in "luci" "common"; do
+                phys_dir_abs="$VER_PUB/$group"
+                [ ! -d "$phys_dir_abs" ] && continue
+                shadow_dir="$VER_PUB/$arch/$group"
+                mkdir -p "$shadow_dir"
+                
+                (
+                  cd "$phys_dir_abs"
+                  valid_files=$(ls *.apk packages.adb* 2>/dev/null || true)
+                  
+                  if [ -n "$valid_files" ]; then
+                    echo "🔗 Linking $group -> $arch (25.12)"
+                    for f in $valid_files; do
+                      ln -snf "../../$group/$f" "$shadow_dir/$f"
+                    done
+                    
+                    cd "$shadow_dir"
+                    apk adbdump --format json packages.adb | python3 "$MAKE_INDEX_PY" -f apk -a "$arch" - > index.json
+                  fi
+                )
+              done
+            done
+
+            # === 第三阶段：收尾 (25.12 专属，含版本别名) ===
+            cp "$GITHUB_WORKSPACE/public-key-25.12.pem" "$GITHUB_WORKSPACE/public/releases/packages-25.12/key.pem"
+            (
+              cd "$GITHUB_WORKSPACE/public/releases"
+              ln -snf packages-25.12 packages-25.12.4
+              ln -snf packages-25.12 packages-25.12.5
+              mkdir -p 25.12.4 25.12.5
+              ln -snf ../packages-25.12 25.12.4/packages
+              ln -snf ../packages-25.12 25.12.5/packages
+            )
+            echo "✅ Release feed (packages-$ver) processed successfully."
+          else
+            echo "⏭️ Skipping release channel: $PHYS_ROOT not found."
+          fi
+
+          # =========================================================
+          # Channel B: rolling snapshot — snapshot/packages
+          # Same three-phase pipeline as the release channel, but with
+          # no version number and no point-release aliases, so it never
+          # gets mixed with releases/packages-25.12.
+          # =========================================================
+          SNAP_ROOT="snapshot/packages"
+
+          if [ -d "$SNAP_ROOT" ]; then
+            # === 第一阶段：物理同步并生成索引 ===
+            for sub_dir_path in $(ls -d $SNAP_ROOT/*/ 2>/dev/null); do
+              sub_dir=$(basename "$sub_dir_path")
+              dest_dir="$GITHUB_WORKSPACE/public/snapshot/packages/$sub_dir"
+
+              pkg_src_dir="$sub_dir_path"
+              [ -d "$sub_dir_path/packages" ] && pkg_src_dir="$sub_dir_path/packages"
+
+              if [ "$(ls -A $pkg_src_dir/$VALID_EXT 2>/dev/null)" ]; then
+                echo "📂 Processing snapshot Feed: $sub_dir"
+                mkdir -p "$dest_dir"
+
+                if [ -d "$sub_dir_path/packages" ]; then
+                  mkdir -p "$dest_dir/packages"
+                  rsync -rlptD "$sub_dir_path/packages/" "$dest_dir/packages/"
+                  target_pkg_dir="$dest_dir/packages"
+                else
+                  rsync -rlptD "$sub_dir_path/" "$dest_dir/"
+                  target_pkg_dir="$dest_dir"
+                fi
+
+                (
+                  cd "$target_pkg_dir"
+                  echo "✍️ Signing APK feed for $sub_dir with ECDSA"
+                  apk mkndx --allow-untrusted \
+                    --sign "$GITHUB_WORKSPACE/key-apk.sec" \
+                    --output packages.adb *.apk
+
+                  apk adbdump --format json packages.adb | python3 "$MAKE_INDEX_PY" -f apk -a "$sub_dir" - > index.json
+                )
+              else
+                echo "⏭️ Skipping $sub_dir: No APK files found."
+              fi
+            done
+
+            # === 第二阶段：影子目录处理 ===
+            SNAP_PUB="$GITHUB_WORKSPACE/public/snapshot/packages"
+            for arch_path in $(ls -d $SNAP_PUB/*/ 2>/dev/null); do
+              arch=$(basename "$arch_path")
+              [[ "$arch" == "luci" || "$arch" == "common" ]] && continue
+
+              for group in "luci" "common"; do
+                phys_dir_abs="$SNAP_PUB/$group"
+                [ ! -d "$phys_dir_abs" ] && continue
+                shadow_dir="$SNAP_PUB/$arch/$group"
+                mkdir -p "$shadow_dir"
+
+                (
+                  cd "$phys_dir_abs"
+                  valid_files=$(ls *.apk packages.adb* 2>/dev/null || true)
+
+                  if [ -n "$valid_files" ]; then
+                    echo "🔗 Linking $group -> $arch (snapshot)"
+                    for f in $valid_files; do
+                      ln -snf "../../$group/$f" "$shadow_dir/$f"
+                    done
+
+                    cd "$shadow_dir"
+                    apk adbdump --format json packages.adb | python3 "$MAKE_INDEX_PY" -f apk -a "$arch" - > index.json
+                  fi
+                )
+              done
+            done
+
+            # === 第三阶段：收尾 (snapshot 专属，不生成版本别名) ===
+            cp "$GITHUB_WORKSPACE/public-key-25.12.pem" "$GITHUB_WORKSPACE/public/snapshot/packages/key.pem"
+            echo "✅ Snapshot feed processed successfully."
+          else
+            echo "⏭️ Skipping snapshot channel: $SNAP_ROOT not found."
+          fi
+
+          # =========================================================
+          # 附加阶段：把 release 端 luci 组的全部软件包链接进 snapshot 的 luci 组。
+          # 否则 snapshot 的 luci 目录里只会有当前正处于 snapshot 通道的那一个包
+          # （比如只有 luci-app-adguardhome），其余所有 luci 包都会缺失。
+          # 用软链接而不是复制：同名文件以 snapshot 原生构建的为准，不会被覆盖，
+          # 其余包全部链接自 release 端；随后必须重新签名/重建索引，
+          # 否则链接进来的包不会出现在 snapshot 的 index.json 里。
+          # =========================================================
+          RELEASE_LUCI="$GITHUB_WORKSPACE/public/releases/packages-$ver/luci"
+          SNAP_LUCI="$GITHUB_WORKSPACE/public/snapshot/packages/luci"
+
+          if [ -d "$RELEASE_LUCI" ]; then
+            mkdir -p "$SNAP_LUCI"
+            echo "🔗 Merging release luci packages into the snapshot luci feed..."
+            (
+              cd "$RELEASE_LUCI"
+              for f in *.apk; do
+                [ -e "$f" ] || continue
+                if [ ! -e "$SNAP_LUCI/$f" ]; then
+                  ln -snf "../../../releases/packages-$ver/luci/$f" "$SNAP_LUCI/$f"
+                fi
+              done
+            )
+
+            (
+              cd "$SNAP_LUCI"
+              if ls *.apk >/dev/null 2>&1; then
+                echo "✍️ Re-signing merged snapshot luci feed"
                 apk mkndx --allow-untrusted \
                   --sign "$GITHUB_WORKSPACE/key-apk.sec" \
                   --output packages.adb *.apk
-                
-                # 生成官方 JSON
-                apk adbdump --format json packages.adb | python3 "$MAKE_INDEX_PY" -f apk -a "$sub_dir" - > index.json
-              )
-            else
-              echo "⏭️ Skipping $sub_dir: No APK files found."
-            fi
-          done
+                apk adbdump --format json packages.adb | python3 "$MAKE_INDEX_PY" -f apk -a "luci" - > index.json
+              fi
+            )
+            echo "✅ Snapshot luci feed merged with release luci feed."
+          fi
 
-          # === 第二阶段：影子目录处理 ===
-          VER_PUB="$GITHUB_WORKSPACE/public/releases/packages-$ver"
-          for arch_path in $(ls -d $VER_PUB/*/ 2>/dev/null); do
-            arch=$(basename "$arch_path")
-            [[ "$arch" == "luci" || "$arch" == "common" ]] && continue
-            
-            for group in "luci" "common"; do
-              phys_dir_abs="$VER_PUB/$group"
-              [ ! -d "$phys_dir_abs" ] && continue
-              shadow_dir="$VER_PUB/$arch/$group"
-              mkdir -p "$shadow_dir"
-              
-              (
-                cd "$phys_dir_abs"
-                valid_files=$(ls *.apk packages.adb* 2>/dev/null || true)
-                
-                if [ -n "$valid_files" ]; then
-                  echo "🔗 Linking $group -> $arch (25.12)"
-                  for f in $valid_files; do
-                    ln -snf "../../$group/$f" "$shadow_dir/$f"
-                  done
-                  
-                  cd "$shadow_dir"
-                  apk adbdump --format json packages.adb | python3 "$MAKE_INDEX_PY" -f apk -a "$arch" - > index.json
-                fi
-              )
-            done
-          done
-
-          # === 第三阶段：收尾 (25.12 专属) ===
-          cp "$GITHUB_WORKSPACE/public-key-25.12.pem" "$GITHUB_WORKSPACE/public/releases/packages-25.12/key.pem"
-          cd "$GITHUB_WORKSPACE/public/releases"
-          ln -snf packages-25.12 packages-25.12.4
-          ln -snf packages-25.12 packages-25.12.5
-          mkdir -p 25.12.4 25.12.5
-          ln -snf ../packages-25.12 25.12.4/packages
-          ln -snf ../packages-25.12 25.12.5/packages
-          
-          echo "✅ All feeds processed successfully."
           mkdir -p $GITHUB_WORKSPACE/.stfolder
 
       - name: Sync feeds to self-hosted server
