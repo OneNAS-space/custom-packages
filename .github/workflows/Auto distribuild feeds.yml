@@ -24,7 +24,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
-          python-version: '3.13'
+          python-version: '3.14'
 
       - name: Build and Install Tools (usign & apk-tools)
         run: |
@@ -42,7 +42,6 @@ jobs:
 
       - name: Restore signing key
         run: |
-          # 设置 APK 签名密钥
           echo "${{ secrets.APK_SIGNING_KEY }}" | base64 -d > key-apk.sec
           chmod 600 key-apk.sec
           openssl ec -in key-apk.sec -pubout > public-key-25.12.pem
@@ -66,7 +65,6 @@ jobs:
           PHYS_ROOT="releases/packages-$ver"
 
           if [ -d "$PHYS_ROOT" ]; then
-            # === 第一阶段：物理同步并生成索引 ===
             for sub_dir_path in $(ls -d $PHYS_ROOT/*/ 2>/dev/null); do
               sub_dir=$(basename "$sub_dir_path")
               dest_dir="$GITHUB_WORKSPACE/public/releases/packages-$ver/$sub_dir"
@@ -94,7 +92,6 @@ jobs:
                     --sign "$GITHUB_WORKSPACE/key-apk.sec" \
                     --output packages.adb *.apk
                   
-                  # 生成官方 JSON
                   apk adbdump --format json packages.adb | python3 "$MAKE_INDEX_PY" -f apk -a "$sub_dir" - > index.json
                 )
               else
@@ -102,7 +99,6 @@ jobs:
               fi
             done
 
-            # === 第二阶段：影子目录处理 ===
             VER_PUB="$GITHUB_WORKSPACE/public/releases/packages-$ver"
             for arch_path in $(ls -d $VER_PUB/*/ 2>/dev/null); do
               arch=$(basename "$arch_path")
@@ -131,7 +127,6 @@ jobs:
               done
             done
 
-            # === 第三阶段：收尾 (25.12 专属，含版本别名) ===
             cp "$GITHUB_WORKSPACE/public-key-25.12.pem" "$GITHUB_WORKSPACE/public/releases/packages-25.12/key.pem"
             (
               cd "$GITHUB_WORKSPACE/public/releases"
@@ -155,7 +150,6 @@ jobs:
           SNAP_ROOT="snapshot/packages"
 
           if [ -d "$SNAP_ROOT" ]; then
-            # === 第一阶段：物理同步并生成索引 ===
             for sub_dir_path in $(ls -d $SNAP_ROOT/*/ 2>/dev/null); do
               sub_dir=$(basename "$sub_dir_path")
               dest_dir="$GITHUB_WORKSPACE/public/snapshot/packages/$sub_dir"
@@ -190,7 +184,6 @@ jobs:
               fi
             done
 
-            # === 第二阶段：影子目录处理 ===
             SNAP_PUB="$GITHUB_WORKSPACE/public/snapshot/packages"
             for arch_path in $(ls -d $SNAP_PUB/*/ 2>/dev/null); do
               arch=$(basename "$arch_path")
@@ -219,30 +212,12 @@ jobs:
               done
             done
 
-            # === 第三阶段：收尾 (snapshot 专属，不生成版本别名) ===
             cp "$GITHUB_WORKSPACE/public-key-25.12.pem" "$GITHUB_WORKSPACE/public/snapshot/packages/key.pem"
             echo "✅ Snapshot feed processed successfully."
           else
             echo "⏭️ Skipping snapshot channel: $SNAP_ROOT not found."
           fi
 
-          # =========================================================
-          # 附加阶段：把 release 端 luci 组的全部软件包链接进 snapshot 的 luci 组。
-          # 否则 snapshot 的 luci 目录里只会有当前正处于 snapshot 通道的那一个包
-          # （比如只有 luci-app-adguardhome），其余所有 luci 包都会缺失。
-          #
-          # 去重按“包名”而不是“完整文件名”判断：文件名形如
-          # <pkgname>-<version>.apk，version 一律以数字开头且不含连字符
-          # （apk 打包本身就要求版本号不能带 '-'），所以用“去掉末尾那段
-          # -<数字开头...>”的方式就能拿到纯包名。这样即便某个包因为
-          # release/snapshot 通道切换，在两边各留了一个不同版本号的文件
-          # （例如 luci-app-adguardhome-26.263.49837~2105706.apk 和
-          # luci-app-adguardhome-26.263.82712~07632bb.apk），也只会保留
-          # snapshot 原生构建的那一份，release 端的旧版本不会被链接进来。
-          #
-          # 用软链接而不是复制；合并完之后必须重新签名/重建索引，否则
-          # 链接进来的包不会出现在 snapshot 的 index.json 里。
-          # =========================================================
           pkg_name_of() {
             basename "$1" .apk | sed -E 's/-[0-9][^-]*$//'
           }
@@ -254,7 +229,6 @@ jobs:
             mkdir -p "$SNAP_LUCI"
             echo "🔗 Merging release luci packages into the snapshot luci feed..."
 
-            # 先记录 snapshot 目录里已经有哪些包名是"原生"构建的（合并前的状态）
             declare -A NATIVE_PKG_NAMES=()
             for nf in "$SNAP_LUCI"/*.apk; do
               [ -e "$nf" ] || continue
