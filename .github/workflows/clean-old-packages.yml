@@ -5,7 +5,7 @@ on:
 
 jobs:
   clean:
-  name: Clean Unwanted APKs
+    name: Clean Unwanted APKs
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -18,7 +18,6 @@ jobs:
         run: |
           echo "==> Starting cleanup of unwanted packages..."
           
-          # 定义需要清理的目标文件名列表
           UNWANTED_FILES=(
             "hysteria-*.apk"
             "naiveproxy-*.apk"
@@ -37,7 +36,6 @@ jobs:
             "xray-core-*.apk"
           )
 
-          # 定义需要扫描的目标目录
           TARGET_DIRS=(
             "releases/packages-25.12/aarch64_cortex-a53/packages"
             "releases/packages-25.12/arm_cortex-a7_neon-vfpv4/packages"
@@ -50,7 +48,6 @@ jobs:
             if [ -d "$dir" ]; then
               echo "Scanning directory: $dir"
               for pattern in "${UNWANTED_FILES[@]}"; do
-                # 查找并删除匹配的文件
                 while IFS= read -r file; do
                   if [ -f "$file" ]; then
                     echo "🗑️ Deleting: $file"
@@ -59,11 +56,6 @@ jobs:
                   fi
                 done < <(find "$dir" -name "$pattern" -type f)
               done
-              
-              # 顺便更新该目录下的索引文件（如果存在 Packages 索引）
-              if [ -f "$dir/Packages" ] || [ -f "$dir/Packages.gz" ]; then
-                echo "⚠️ Note: Target directory $dir contains index files. You may need to regenerate indices if required."
-              fi
             else
               echo "⚠️ Directory not found, skipping: $dir"
             fi
