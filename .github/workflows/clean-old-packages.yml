@@ -1,0 +1,87 @@
+name: Clean Unwanted Packages
+
+on:
+  workflow_dispatch:
+
+jobs:
+  clean:
+  name: Clean Unwanted APKs
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Remove Unwanted Packages
+        run: |
+          echo "==> Starting cleanup of unwanted packages..."
+          
+          # 定义需要清理的目标文件名列表
+          UNWANTED_FILES=(
+            "hysteria-*.apk"
+            "naiveproxy-*.apk"
+            "shadowsocks-libev-ss-local-*.apk"
+            "shadowsocks-libev-ss-redir-*.apk"
+            "shadowsocks-libev-ss-server-*.apk"
+            "shadowsocks-rust-sslocal-*.apk"
+            "shadowsocks-rust-ssserver-*.apk"
+            "shadowsocksr-libev-ssr-local-*.apk"
+            "shadowsocksr-libev-ssr-redir-*.apk"
+            "shadowsocksr-libev-ssr-server-*.apk"
+            "simple-obfs-client-*.apk"
+            "sing-box-*.apk"
+            "tuic-client-*.apk"
+            "v2ray-plugin-*.apk"
+            "xray-core-*.apk"
+          )
+
+          # 定义需要扫描的目标目录
+          TARGET_DIRS=(
+            "releases/packages-25.12/aarch64_cortex-a53/packages"
+            "releases/packages-25.12/arm_cortex-a7_neon-vfpv4/packages"
+            "releases/packages-25.12/x86_64/packages"
+          )
+
+          DELETED_COUNT=0
+
+          for dir in "${TARGET_DIRS[@]}"; do
+            if [ -d "$dir" ]; then
+              echo "Scanning directory: $dir"
+              for pattern in "${UNWANTED_FILES[@]}"; do
+                # 查找并删除匹配的文件
+                while IFS= read -r file; do
+                  if [ -f "$file" ]; then
+                    echo "🗑️ Deleting: $file"
+                    rm -f "$file"
+                    DELETED_COUNT=$((DELETED_COUNT + 1))
+                  fi
+                done < <(find "$dir" -name "$pattern" -type f)
+              done
+              
+              # 顺便更新该目录下的索引文件（如果存在 Packages 索引）
+              if [ -f "$dir/Packages" ] || [ -f "$dir/Packages.gz" ]; then
+                echo "⚠️ Note: Target directory $dir contains index files. You may need to regenerate indices if required."
+              fi
+            else
+              echo "⚠️ Directory not found, skipping: $dir"
+            fi
+          done
+
+          echo "Total files deleted: $DELETED_COUNT"
+
+      - name: Commit and Push Changes
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add releases/
+          
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore: cleanup unwanted legacy proxy packages"
+            git push
+            echo "Successfully pushed cleanup changes to repository."
+          fi
