@@ -130,10 +130,8 @@ jobs:
             cp "$GITHUB_WORKSPACE/public-key-25.12.pem" "$GITHUB_WORKSPACE/public/releases/packages-25.12/key.pem"
             (
               cd "$GITHUB_WORKSPACE/public/releases"
-              ln -snf packages-25.12 packages-25.12.4
               ln -snf packages-25.12 packages-25.12.5
-              mkdir -p 25.12.4 25.12.5
-              ln -snf ../packages-25.12 25.12.4/packages
+              mkdir -p 25.12.5
               ln -snf ../packages-25.12 25.12.5/packages
             )
             echo "✅ Release feed (packages-$ver) processed successfully."
