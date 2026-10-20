@@ -131,8 +131,10 @@ jobs:
             (
               cd "$GITHUB_WORKSPACE/public/releases"
               ln -snf packages-25.12 packages-25.12.5
-              mkdir -p 25.12.5
+              ln -snf packages-25.12 packages-25.12.6
+              mkdir -p 25.12.5 25.12.6
               ln -snf ../packages-25.12 25.12.5/packages
+              ln -snf ../packages-25.12 25.12.6/packages
             )
             echo "✅ Release feed (packages-$ver) processed successfully."
           else
