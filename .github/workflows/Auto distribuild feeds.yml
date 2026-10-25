@@ -20,6 +20,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Restore file mtimes from git history
+        run: |
+          git ls-files -z '*.apk' | while IFS= read -r -d '' f; do
+            ts=$(git log -1 --format=%ct -- "$f")
+            [ -n "$ts" ] && touch -d "@$ts" "$f"
+          done
 
       - name: Set up Python
         uses: actions/setup-python@v7
